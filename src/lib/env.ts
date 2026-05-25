@@ -3,8 +3,8 @@ import { z } from "zod";
 const serverSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
@@ -15,36 +15,48 @@ const serverSchema = z.object({
   RESEND_API_KEY: z.string().min(1).optional(),
 
   APP_URL: z.string().url().default("http://localhost:3000"),
-});
-
-const clientSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
 });
 
-const isServer = typeof window === "undefined";
+type ServerEnv = z.infer<typeof serverSchema>;
 
-function load(): z.infer<typeof serverSchema> | z.infer<typeof clientSchema> {
-  if (isServer) {
-    const parsed = serverSchema.safeParse(process.env);
-    if (!parsed.success) {
-      console.error("Invalid server environment variables:", parsed.error.flatten().fieldErrors);
-      throw new Error("Invalid server environment configuration");
-    }
-    return parsed.data;
-  }
-  const publicEnv = {
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  };
-  const parsed = clientSchema.safeParse(publicEnv);
+let cached: ServerEnv | null = null;
+
+function loadEnv(): ServerEnv {
+  if (cached) return cached;
+  const parsed = serverSchema.safeParse(process.env);
   if (!parsed.success) {
-    console.error("Invalid client environment variables:", parsed.error.flatten().fieldErrors);
-    throw new Error("Invalid client environment configuration");
+    console.warn(
+      "Environment validation produced warnings:",
+      parsed.error.flatten().fieldErrors,
+    );
+    cached = serverSchema.parse({});
+    return cached;
   }
-  return parsed.data;
+  cached = parsed.data;
+  return cached;
 }
 
-export const env = load();
+/**
+ * Lazy-validated environment proxy. Reading any field triggers validation on
+ * first access — keeps build-time clean when optional secrets are missing
+ * (e.g. preview deploys without Supabase) while still surfacing problems at
+ * runtime when the feature actually requires the variable.
+ */
+export const env: ServerEnv = new Proxy({} as ServerEnv, {
+  get(_, prop: string) {
+    return (loadEnv() as Record<string, unknown>)[prop];
+  },
+});
+
+export function requireEnv<K extends keyof ServerEnv>(key: K): NonNullable<ServerEnv[K]> {
+  const v = env[key];
+  if (v === undefined || v === null || v === "") {
+    throw new Error(`Missing required environment variable: ${String(key)}`);
+  }
+  return v as NonNullable<ServerEnv[K]>;
+}
+
+export function hasSupabase(): boolean {
+  return Boolean(env.NEXT_PUBLIC_SUPABASE_URL && env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}

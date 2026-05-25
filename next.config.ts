@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {
-    typedRoutes: false,
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
   images: {

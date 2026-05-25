@@ -13,7 +13,7 @@ export function err<E>(error: E): Result<never, E> {
 export class AppError extends Error {
   readonly code: string;
   readonly userMessage: string;
-  readonly cause?: unknown;
+  override readonly cause?: unknown;
   readonly statusCode: number;
 
   constructor(params: {

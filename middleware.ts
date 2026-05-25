@@ -1,10 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { hasSupabase } from "@/lib/env";
 import { updateSession } from "@/server/supabase/middleware-client";
 
 const PROTECTED_PREFIXES = ["/app", "/onboarding"];
 const AUTH_PAGES = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
+  // If Supabase isn't configured yet (e.g. preview without env vars),
+  // skip session refresh entirely so the public site keeps working.
+  if (!hasSupabase()) {
+    return NextResponse.next({ request });
+  }
+
   const { pathname } = request.nextUrl;
   const { response, user } = await updateSession(request);
 
