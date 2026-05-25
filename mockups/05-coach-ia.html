@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finanzia · Coach IA</title>
+<link rel="stylesheet" href="./_shared/cosmos.css" />
+<style>
+  .app-shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  aside { padding: 24px 16px; border-right: 1px solid var(--color-border-subtle); background: rgba(10,11,20,0.4); backdrop-filter: blur(20px); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+  aside .logo { margin: 0 12px 24px; }
+  .group-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-text-muted); padding: 16px 12px 8px; }
+  aside .footer { margin-top: auto; padding: 12px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--color-border-subtle); }
+  aside .footer .avatar { width: 32px; height: 32px; border-radius: 999px; background: var(--gradient-aurora); }
+  aside .footer .who strong { display: block; font-size: 13px; }
+  aside .footer .who span { font-size: 11px; color: var(--color-text-muted); }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--color-border-subtle); background: rgba(10,11,20,0.55); backdrop-filter: blur(20px); }
+  .topbar .crumbs { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary); }
+  .topbar .crumbs strong { color: var(--color-text-primary); font-weight: 500; }
+
+  /* Two-pane: chat | knowledge panel */
+  .coach-grid { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: calc(100vh - 65px); }
+  .chat-pane { padding: 32px 32px 0; display: flex; flex-direction: column; max-width: 760px; margin: 0 auto; width: 100%; }
+  .know-pane { border-left: 1px solid var(--color-border-subtle); padding: 24px; background: rgba(15,17,32,0.4); backdrop-filter: blur(20px); }
+
+  .convo-head { display: flex; align-items: center; gap: 14px; padding-bottom: 24px; border-bottom: 1px solid var(--color-border-subtle); margin-bottom: 32px; }
+  .convo-head .star { width: 44px; height: 44px; border-radius: 999px; background: var(--gradient-aurora); box-shadow: 0 0 24px rgba(123,91,255,0.5); flex: 0 0 auto; position: relative; }
+  .convo-head .star::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1px solid rgba(123,91,255,0.4); animation: orbit 4s linear infinite; }
+  @keyframes orbit { from { transform: rotate(0deg) scale(1); opacity: 1; } to { transform: rotate(360deg) scale(1.6); opacity: 0; } }
+  .convo-head h1 { font-family: "Fraunces", serif; font-weight: 300; font-size: 24px; letter-spacing: -0.02em; margin: 0; }
+  .convo-head p { margin: 4px 0 0; font-size: 13px; color: var(--color-text-muted); }
+  .convo-head .pill-violet { margin-left: auto; }
+
+  .messages { display: flex; flex-direction: column; gap: 24px; flex: 1; padding-bottom: 32px; }
+
+  .msg { display: flex; gap: 14px; }
+  .msg .avatar-sm { width: 32px; height: 32px; border-radius: 999px; flex: 0 0 auto; }
+  .msg .avatar-sm.user { background: linear-gradient(135deg, #5fb8ff, #5de2a2); }
+  .msg .avatar-sm.ai { background: var(--gradient-aurora); box-shadow: 0 0 16px rgba(123,91,255,0.4); }
+  .msg .content { flex: 1; }
+  .msg .who { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 6px; }
+  .msg .body { font-size: 15px; line-height: 1.65; color: var(--color-text-primary); }
+  .msg .body p { margin: 0 0 12px; }
+  .msg .body p:last-child { margin: 0; }
+  .msg .body strong { font-weight: 500; }
+  .msg.user .body { padding: 14px 18px; border-radius: 16px; background: var(--color-bg-glass); border: 1px solid var(--color-border-subtle); display: inline-block; }
+
+  .ai-thinking { display: inline-flex; gap: 4px; align-items: center; padding: 8px 12px; border-radius: 999px; background: rgba(123,91,255,0.1); border: 1px solid rgba(123,91,255,0.2); font-size: 12px; color: #c8b9ff; margin-top: 8px; }
+  .ai-thinking .dot { width: 4px; height: 4px; border-radius: 999px; background: var(--color-nebula-violet); animation: bounce 1.2s ease-in-out infinite; }
+  .ai-thinking .dot:nth-child(2) { animation-delay: 0.15s; }
+  .ai-thinking .dot:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-3px); opacity: 1; } }
+
+  .reasoning-card {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(15,17,32,0.5);
+    border: 1px solid var(--color-border-subtle);
+    font-size: 13px;
+  }
+  .reasoning-card .head { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 10px; }
+  .reasoning-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--color-border-subtle); }
+  .reasoning-card .row:last-child { border: 0; padding-bottom: 0; }
+  .reasoning-card .row .v { font-family: "Geist Mono", monospace; font-size: 12px; }
+  .reasoning-card .verdict { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(93,226,162,0.1); border: 1px solid rgba(93,226,162,0.25); color: var(--color-mint-positive); font-size: 13px; font-weight: 500; }
+
+  .action-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .action-chip { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--color-bg-glass); border: 1px solid var(--color-border-default); font-size: 12px; color: var(--color-text-primary); transition: all 0.15s; }
+  .action-chip:hover { background: var(--color-bg-glass-strong); border-color: var(--color-nebula-violet); }
+  .action-chip svg { width: 12px; height: 12px; }
+
+  /* Composer */
+  .composer { position: sticky; bottom: 0; padding: 16px 0 24px; background: linear-gradient(180deg, transparent 0%, var(--color-bg-deep) 30%); }
+  .composer-box { display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 18px; border-radius: 999px; background: var(--color-bg-glass-strong); border: 1px solid var(--color-border-default); backdrop-filter: blur(24px); }
+  .composer-box input { flex: 1; background: transparent; border: 0; outline: none; font-size: 15px; color: var(--color-text-primary); font-family: inherit; padding: 12px 0; }
+  .composer-box input::placeholder { color: var(--color-text-muted); }
+  .composer-actions { display: flex; gap: 6px; }
+  .composer-actions .icon-btn { width: 36px; height: 36px; border-radius: 999px; background: transparent; border: 0; display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); cursor: pointer; }
+  .composer-actions .icon-btn:hover { background: rgba(255,255,255,0.05); color: var(--color-text-primary); }
+  .composer-actions .send { background: var(--gradient-aurora); color: white; }
+  .suggestions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .suggestion { padding: 8px 14px; border-radius: 999px; background: var(--color-bg-glass); border: 1px solid var(--color-border-subtle); font-size: 12px; color: var(--color-text-secondary); cursor: pointer; }
+  .suggestion:hover { color: var(--color-text-primary); background: var(--color-bg-glass-strong); }
+
+  /* Knowledge panel */
+  .know-pane h3 { font-family: "Fraunces", serif; font-weight: 300; font-size: 18px; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .know-pane .sub { font-size: 12px; color: var(--color-text-muted); margin-bottom: 20px; line-height: 1.45; }
+  .know-section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--color-border-subtle); }
+  .know-section:last-child { border-bottom: 0; }
+  .know-section h4 { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-muted); margin: 0 0 10px; font-weight: 500; }
+  .know-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .know-row span { color: var(--color-text-secondary); }
+  .know-row strong { font-family: "Geist Mono", monospace; font-weight: 500; font-size: 12px; }
+  .know-row strong.pos { color: var(--color-mint-positive); }
+  .know-row strong.neg { color: var(--color-coral-negative); }
+  .know-cache { margin-top: 12px; padding: 10px; border-radius: 8px; background: rgba(95,228,255,0.08); border: 1px solid rgba(95,228,255,0.18); font-size: 11px; color: var(--color-nebula-cyan); display: flex; align-items: center; gap: 8px; }
+  .know-cache svg { flex: 0 0 auto; }
+</style>
+</head>
+<body>
+  <div class="mockup-label">05 · Coach IA</div>
+  <div class="nebula"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+  <div class="app-shell">
+    <aside>
+      <div class="logo"><span class="logo-mark"></span><span>finanzia</span></div>
+      <div class="group-label">Universo</div>
+      <nav>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12c4-6 14-6 18 0M3 12c4 6 14 6 18 0"/></svg>Timeline</a>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6 6l12 2M8 8l4 10M18 8l-6 10"/></svg>Insights</a>
+        <a class="nav-item active"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.5 6.5L21 10l-5 4 1.5 7L12 17l-5.5 4L8 14l-5-4 6.5-1.5z"/></svg>Coach IA</a>
+      </nav>
+      <div class="group-label">Movimientos</div>
+      <nav>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Cuentas</a>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Transacciones</a>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Recurrentes</a>
+      </nav>
+      <div class="group-label">Planificación</div>
+      <nav>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Presupuestos</a>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v8M5 11l7-3 7 3M5 11v9h14v-9"/></svg>Planes</a>
+        <a class="nav-item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17l6-6 4 4 8-8"/></svg>Deudas</a>
+      </nav>
+      <div class="footer">
+        <div class="avatar"></div>
+        <div class="who"><strong>Carlos S.</strong><span>Plan Premium</span></div>
+      </div>
+    </aside>
+
+    <div>
+      <div class="topbar">
+        <div class="crumbs"><span>Universo</span><span>›</span><strong>Coach IA</strong></div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <span class="pill pill-violet">Claude Sonnet 4.6</span>
+          <button class="btn btn-ghost btn-sm">Nueva conversación</button>
+        </div>
+      </div>
+
+      <div class="coach-grid">
+        <!-- CHAT -->
+        <div class="chat-pane">
+          <div class="convo-head">
+            <div class="star"></div>
+            <div>
+              <h1>Conversación sobre tu mayo</h1>
+              <p>El coach analiza tu universo con contexto cifrado y nunca entrena con tus datos.</p>
+            </div>
+            <span class="pill pill-violet">Contexto: 8,2 K tok cached</span>
+          </div>
+
+          <div class="messages">
+            <!-- USER MESSAGE -->
+            <div class="msg user">
+              <div class="content" style="display: flex; justify-content: flex-end;">
+                <div>
+                  <div class="who" style="text-align: right;">Tú · 14:42</div>
+                  <div class="body">¿Puedo permitirme un viaje a Lisboa de 1.500 € en julio sin retrasar el plan de Japón?</div>
+                </div>
+              </div>
+              <div class="avatar-sm user"></div>
+            </div>
+
+            <!-- AI MESSAGE -->
+            <div class="msg">
+              <div class="avatar-sm ai"></div>
+              <div class="content">
+                <div class="who">Finanzia coach · ahora</div>
+                <div class="body">
+                  <p>Sí, con margen. He simulado dos escenarios usando tu ritmo real de ahorro de los últimos 6 meses (≈ 920 €/mes) y tus gastos recurrentes confirmados para junio-julio.</p>
+                </div>
+
+                <div class="reasoning-card">
+                  <div class="head">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                    Simulación · julio 2026
+                  </div>
+                  <div class="row"><span>Ahorro disponible al 1 julio</span><span class="v tabular">€ 2.380</span></div>
+                  <div class="row"><span>Coste del viaje (vuelos + hotel + dietas)</span><span class="v tabular" style="color: var(--color-coral-negative)">−€ 1.500</span></div>
+                  <div class="row"><span>Aporte mensual a «Japón 2027»</span><span class="v tabular" style="color: var(--color-mint-positive)">€ 350 mantenido</span></div>
+                  <div class="row"><span>Margen residual</span><span class="v tabular">€ 530</span></div>
+                  <div class="verdict">✓ Viable · No afecta a la fecha objetivo de Japón (oct 2027)</div>
+                </div>
+
+                <div class="body" style="margin-top: 16px;">
+                  <p>Mi recomendación: <strong>aparta los 1.500 € hoy</strong> a tu cuenta «Viajes» para fijar el coste y no tocar el ahorro del plan de Japón. He preparado dos acciones por si te ayudan:</p>
+                </div>
+
+                <div class="action-row">
+                  <button class="action-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                    Crear plan «Lisboa julio»
+                  </button>
+                  <button class="action-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 3h5v5M8 21H3v-5M21 3l-7 7M3 21l7-7"/></svg>
+                    Transferir € 1.500 a «Viajes»
+                  </button>
+                  <button class="action-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    Ver gasto histórico en viajes
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="msg">
+              <div class="avatar-sm ai"></div>
+              <div class="content">
+                <div class="ai-thinking">
+                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                  Esperando tu siguiente pregunta…
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPOSER -->
+          <div class="composer">
+            <div class="suggestions">
+              <button class="suggestion">¿Qué suscripción debería pausar primero?</button>
+              <button class="suggestion">Resumen de mi mayo</button>
+              <button class="suggestion">¿Cómo voy con la regla 50/30/20?</button>
+            </div>
+            <div class="composer-box">
+              <input type="text" placeholder="Pregúntale a Finanzia… (tiene contexto de tus 60 últimas transacciones)" />
+              <div class="composer-actions">
+                <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v12"/></svg></button>
+                <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 1v3M12 20v3M4 12H1M23 12h-3M5.6 5.6L3.5 3.5M20.5 20.5l-2.1-2.1M5.6 18.4l-2.1 2.1M20.5 3.5l-2.1 2.1M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg></button>
+                <button class="icon-btn send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KNOWLEDGE PANEL -->
+        <aside class="know-pane">
+          <h3>Lo que sé de ti</h3>
+          <p class="sub">Contexto cifrado y cacheado. Puedes editarlo en Ajustes → IA.</p>
+
+          <div class="know-section">
+            <h4>Identidad</h4>
+            <div class="know-row"><span>Moneda base</span><strong>EUR</strong></div>
+            <div class="know-row"><span>Zona horaria</span><strong>Europe/Madrid</strong></div>
+            <div class="know-row"><span>Situación</span><strong>Soltero · 1 ingreso</strong></div>
+          </div>
+
+          <div class="know-section">
+            <h4>Snapshot financiero</h4>
+            <div class="know-row"><span>Patrimonio</span><strong class="tabular">€ 47.382</strong></div>
+            <div class="know-row"><span>Liquidez</span><strong class="tabular">€ 12.408</strong></div>
+            <div class="know-row"><span>Ahorro mensual</span><strong class="pos tabular">€ 920</strong></div>
+            <div class="know-row"><span>Tasa ahorro</span><strong class="tabular">38 %</strong></div>
+            <div class="know-row"><span>Health score</span><strong class="tabular">78 / 100</strong></div>
+          </div>
+
+          <div class="know-section">
+            <h4>Mayo 2026</h4>
+            <div class="know-row"><span>Ingresos</span><strong class="pos tabular">€ 2.420</strong></div>
+            <div class="know-row"><span>Gastos</span><strong class="neg tabular">€ 1.580</strong></div>
+            <div class="know-row"><span>Top categoría</span><strong>Hogar · € 612</strong></div>
+            <div class="know-row"><span>Anomalías</span><strong>1 (restaurantes)</strong></div>
+          </div>
+
+          <div class="know-section">
+            <h4>Planes activos</h4>
+            <div class="know-row"><span>Japón 2027</span><strong>41 %</strong></div>
+            <div class="know-row"><span>Fondo emergencia</span><strong>86 %</strong></div>
+            <div class="know-row"><span>Entrada piso</span><strong>12 %</strong></div>
+          </div>
+
+          <div class="know-cache">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>Cache hit · ahorraste 6,4 K tokens en esta respuesta.</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

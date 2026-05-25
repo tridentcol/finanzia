@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+/* ============================================================
+   FINANZIA — Cosmos design tokens
+   Dark theme is the canonical look; light theme is supported as
+   a secondary surface for users who request it.
+   ============================================================ */
+
+@theme {
+  /* —— Surfaces (dark) —— */
+  --color-bg-deep: #05060a;
+  --color-bg-base: #0a0b14;
+  --color-bg-elevated: #0f1120;
+  --color-bg-glass: rgba(255, 255, 255, 0.03);
+  --color-bg-glass-strong: rgba(255, 255, 255, 0.06);
+
+  /* —— Borders —— */
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+
+  /* —— Text —— */
+  --color-text-primary: #f0f2ff;
+  --color-text-secondary: #a8adc9;
+  --color-text-muted: #6b6f8d;
+  --color-text-inverse: #05060a;
+
+  /* —— Nebula accents —— */
+  --color-nebula-violet: #7b5bff;
+  --color-nebula-blue: #4f8cff;
+  --color-nebula-cyan: #5fe4ff;
+  --color-nebula-rose: #ff5b9e;
+
+  /* —— Semantic —— */
+  --color-mint-positive: #5de2a2;
+  --color-coral-negative: #ff6e7a;
+  --color-amber-warning: #ffb547;
+  --color-azure-info: #5fb8ff;
+
+  /* —— Gradients (referenced via var()) —— */
+  --gradient-aurora: linear-gradient(135deg, #7b5bff 0%, #4f8cff 50%, #5fe4ff 100%);
+  --gradient-deep-space: radial-gradient(ellipse at top, #1a1735 0%, #05060a 60%);
+  --gradient-nebula-rose: linear-gradient(135deg, #ff5b9e 0%, #7b5bff 100%);
+
+  /* —— Radii —— */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* —— Shadows / Glows —— */
+  --shadow-elevation:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(0, 0, 0, 0.5);
+  --shadow-elevation-lg:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 40px 120px -32px rgba(0, 0, 0, 0.7);
+  --shadow-glow-violet: 0 0 40px -10px rgba(123, 91, 255, 0.5);
+  --shadow-glow-mint: 0 0 32px -8px rgba(93, 226, 162, 0.4);
+  --shadow-glow-coral: 0 0 32px -8px rgba(255, 110, 122, 0.4);
+
+  /* —— Motion —— */
+  --ease-cosmos: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-orbit: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 180ms;
+  --duration-base: 280ms;
+  --duration-slow: 480ms;
+
+  /* —— Typography (loaded via next/font in layout) —— */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/* ============================================================
+   Base layer — global resets aligned to the cosmos palette.
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--color-border-subtle);
+  }
+
+  html,
+  body {
+    height: 100%;
+    background: var(--color-bg-deep);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-image: var(--gradient-deep-space);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(123, 91, 255, 0.35);
+    color: var(--color-text-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-nebula-violet);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Hide focus ring for mouse users while preserving keyboard focus */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Tabular figures for any numeric display by default */
+  .tabular,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+/* ============================================================
+   Utility helpers specific to the cosmos system.
+   Kept minimal — most variation is via component composition.
+   ============================================================ */
+
+@utility glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--color-border-subtle);
+}
+
+@utility glass-strong {
+  background: var(--color-bg-glass-strong);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid var(--color-border-default);
+}
+
+@utility aurora-text {
+  background: var(--gradient-aurora);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Motion preferences — collapse decorative animation when the
+   user requests reduced motion.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

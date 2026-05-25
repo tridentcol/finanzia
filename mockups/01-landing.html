@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finanzia · Landing</title>
+<link rel="stylesheet" href="./_shared/cosmos.css" />
+<style>
+  .hero {
+    position: relative;
+    padding: 140px 24px 120px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 200;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin: 0 0 24px;
+  }
+  .hero p.lead {
+    max-width: 640px;
+    margin: 0 auto 40px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+  }
+  .hero-cta { display: inline-flex; gap: 12px; }
+
+  .orbit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 32px;
+    background: rgba(123,91,255,0.1);
+    border: 1px solid rgba(123,91,255,0.25);
+    font-size: 12px;
+    color: #cbbfff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .orbit-badge .dot {
+    width: 6px; height: 6px; border-radius: 999px;
+    background: var(--color-nebula-violet);
+    box-shadow: 0 0 8px rgba(123,91,255,0.8);
+  }
+
+  .hero-preview {
+    margin: 64px auto 0;
+    max-width: 980px;
+    border-radius: 24px;
+    padding: 24px;
+    background: var(--color-bg-glass);
+    border: 1px solid var(--color-border-default);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 80px 200px -60px rgba(123,91,255,0.4), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .hero-preview .row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+  }
+  .hero-preview .panel {
+    background: rgba(15,17,32,0.6);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .hero-preview .net-worth-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .hero-preview .net-worth-value {
+    font-family: "Fraunces", serif;
+    font-weight: 200;
+    font-size: 64px;
+    letter-spacing: -0.03em;
+    margin-top: 4px;
+    background: var(--gradient-aurora);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-preview .net-delta { color: var(--color-mint-positive); font-size: 13px; margin-top: 6px; }
+  .hero-preview .sparkline { margin-top: 16px; }
+
+  .hero-preview .mini-insight {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(123,91,255,0.08);
+    border: 1px solid rgba(123,91,255,0.18);
+  }
+  .hero-preview .mini-insight .star {
+    flex: 0 0 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--gradient-aurora);
+    box-shadow: 0 0 16px rgba(123,91,255,0.6);
+  }
+  .hero-preview .mini-insight strong { font-weight: 500; font-size: 13px; }
+  .hero-preview .mini-insight p { margin: 4px 0 0; font-size: 12px; color: var(--color-text-secondary); line-height: 1.45; }
+
+  section { padding: 96px 24px; max-width: 1100px; margin: 0 auto; }
+  section h2 { font-family: "Fraunces", serif; font-weight: 300; font-size: 44px; letter-spacing: -0.025em; line-height: 1.1; margin: 0 0 16px; }
+  section .section-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 12px; }
+  section .section-lead { max-width: 640px; color: var(--color-text-secondary); line-height: 1.55; font-size: 17px; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .feature { padding: 28px; border-radius: 18px; background: var(--color-bg-glass); border: 1px solid var(--color-border-subtle); }
+  .feature .icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; background: rgba(123,91,255,0.15); }
+  .feature h3 { font-size: 16px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .feature p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--color-text-secondary); }
+
+  .three-promises { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+  .promise { padding: 24px; border-radius: 16px; border: 1px solid var(--color-border-subtle); }
+  .promise .num { font-family: "Fraunces", serif; font-weight: 200; font-size: 40px; color: transparent; background: var(--gradient-aurora); -webkit-background-clip: text; background-clip: text; }
+  .promise h3 { font-size: 14px; font-weight: 500; margin: 12px 0 6px; }
+  .promise p { margin: 0; font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .closing { text-align: center; padding: 120px 24px; }
+  .closing h2 { font-size: 56px; max-width: 720px; margin: 0 auto 32px; }
+  .closing p { color: var(--color-text-secondary); margin: 0 auto 32px; max-width: 480px; }
+
+  header.top {
+    position: fixed; inset: 0 0 auto 0; height: 64px; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+  }
+  header.top nav { display: flex; gap: 32px; font-size: 14px; color: var(--color-text-secondary); }
+  header.top nav a:hover { color: var(--color-text-primary); }
+  header.top .right { display: flex; gap: 12px; align-items: center; }
+</style>
+</head>
+<body>
+  <div class="mockup-label">01 · Landing</div>
+  <div class="nebula"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+  <header class="top">
+    <div class="logo">
+      <span class="logo-mark"></span>
+      <span>finanzia</span>
+    </div>
+    <nav>
+      <a href="#concept">Concepto</a>
+      <a href="#how">Cómo funciona</a>
+      <a href="#pricing">Planes</a>
+      <a href="#manifesto">Manifiesto</a>
+    </nav>
+    <div class="right">
+      <a href="#" style="font-size: 14px; color: var(--color-text-secondary)">Entrar</a>
+      <button class="btn btn-aurora btn-sm">Empezar</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="orbit-badge"><span class="dot"></span>Tu copiloto financiero con IA · Beta privada</div>
+    <h1>Tu universo financiero,<br/><span class="aurora-text">en un solo lienzo.</span></h1>
+    <p class="lead">
+      Finanzia no es un dashboard. Es un lienzo navegable donde tu dinero fluye como un río,
+      las categorías brillan como constelaciones y la IA actúa como un copiloto silencioso —
+      aparece sólo cuando tiene algo que aportar.
+    </p>
+    <div class="hero-cta">
+      <button class="btn btn-aurora btn-lg">Empezar gratis</button>
+      <button class="btn btn-secondary btn-lg">Ver demo (2 min)</button>
+    </div>
+
+    <!-- Hero preview -->
+    <div class="hero-preview">
+      <div class="row">
+        <div class="panel">
+          <div class="net-worth-label">Tu patrimonio · Mayo 2026</div>
+          <div class="net-worth-value tabular">€ 47.382,18</div>
+          <div class="net-delta tabular">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <svg class="sparkline" viewBox="0 0 480 100" width="100%" height="100">
+            <defs>
+              <linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#7b5bff" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#7b5bff" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="hl" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#7b5bff" />
+                <stop offset="100%" stop-color="#5fe4ff" />
+              </linearGradient>
+            </defs>
+            <path d="M0 70 C 60 65, 90 50, 140 55 S 220 30, 280 45 S 360 20, 420 18 L 480 12 L 480 100 L 0 100 Z" fill="url(#hg)"/>
+            <path d="M0 70 C 60 65, 90 50, 140 55 S 220 30, 280 45 S 360 20, 420 18 L 480 12" stroke="url(#hl)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="480" cy="12" r="4" fill="#5fe4ff" />
+            <circle cx="480" cy="12" r="10" fill="#5fe4ff" opacity="0.2" />
+          </svg>
+        </div>
+        <div class="panel" style="display:flex; flex-direction:column; gap:12px">
+          <div class="mini-insight">
+            <div class="star"></div>
+            <div>
+              <strong>Has gastado 32 % menos en restaurantes</strong>
+              <p>Esta semana frente a las últimas 8. Tu ritmo de ahorro va 60 € por delante.</p>
+            </div>
+          </div>
+          <div class="mini-insight">
+            <div class="star" style="background: linear-gradient(135deg, #5de2a2, #5fb8ff)"></div>
+            <div>
+              <strong>Plan «Japón 2027» a tiempo</strong>
+              <p>Llegarás 11 días antes si mantienes los aportes actuales.</p>
+            </div>
+          </div>
+          <div class="mini-insight">
+            <div class="star" style="background: linear-gradient(135deg, #ffb547, #ff6e7a)"></div>
+            <div>
+              <strong>Suscripción olvidada detectada</strong>
+              <p>Disney+ se renovó pero no se usa desde febrero. ¿Cancelar?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="concept">
+    <div class="section-eyebrow">Concepto</div>
+    <h2>Más allá del dashboard.</h2>
+    <p class="section-lead">
+      Los dashboards convencionales muestran lo que ya pasó. Finanzia te ayuda a entenderlo y, sobre todo,
+      a decidir lo siguiente. Tres metáforas componen tu universo: el <em>río temporal</em>, la
+      <em>constelación de categorías</em> y las <em>cartas proactivas</em> que aparecen cuando importan.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a3ff" stroke-width="1.6"><path d="M3 12c4-6 14-6 18 0M3 12c4 6 14 6 18 0"/></svg>
+        </div>
+        <h3>Río temporal</h3>
+        <p>Navega tu vida financiera como una línea de tiempo: pasado, hoy, y futuro proyectado con bandas de confianza.</p>
+      </div>
+      <div class="feature">
+        <div class="icon" style="background: rgba(95,228,255,0.15)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5fe4ff" stroke-width="1.6"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6 6l12 2M8 8l4 10M18 8l-6 10"/></svg>
+        </div>
+        <h3>Constelación de categorías</h3>
+        <p>Cada categoría brilla con la fuerza de tu gasto. Las relaciones entre ellas dibujan tu universo.</p>
+      </div>
+      <div class="feature">
+        <div class="icon" style="background: rgba(93,226,162,0.15)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5de2a2" stroke-width="1.6"><path d="M12 2l2.5 6.5L21 10l-5 4 1.5 7L12 17l-5.5 4L8 14l-5-4 6.5-1.5z"/></svg>
+        </div>
+        <h3>Cartas proactivas</h3>
+        <p>Insights que aparecen cuando hay algo que decirte. Nada de buscar entre gráficos para entender tu mes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="section-eyebrow">Cómo funciona</div>
+    <h2>Tres promesas, sin atajos.</h2>
+    <div class="three-promises">
+      <div class="promise">
+        <div class="num tabular">01</div>
+        <h3>Heurística primero, IA después</h3>
+        <p>Un motor estadístico detecta patrones, anomalías y proyecciones en milisegundos. Claude se invoca solo cuando aporta matiz.</p>
+      </div>
+      <div class="promise">
+        <div class="num tabular">02</div>
+        <h3>Decisiones, no registros</h3>
+        <p>«Puedes ahorrar 240 € si pausas estas dos suscripciones.» Cada insight termina en una acción ejecutable.</p>
+      </div>
+      <div class="promise">
+        <div class="num tabular">03</div>
+        <h3>Privacidad por diseño</h3>
+        <p>Tus datos viven en tu cuenta cifrada. La IA usa una ventana de contexto controlada y nunca entrena con tus movimientos.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="closing">
+    <h2>Tu próximo movimiento <span class="aurora-text">empieza con uno.</span></h2>
+    <p>Crea tu universo en 90 segundos. Importa un CSV, conecta tu banco o registra un gasto. Lo demás lo orquesta Finanzia.</p>
+    <button class="btn btn-aurora btn-lg">Crear mi universo</button>
+  </div>
+
+</body>
+</html>
