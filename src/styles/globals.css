@@ -66,10 +66,13 @@
   --duration-base: 280ms;
   --duration-slow: 480ms;
 
-  /* —— Typography (loaded via next/font in layout) —— */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+  /* —— Typography (loaded via next/font in layout) ——
+     Display and UI share the same family (DM Sans). The "display"
+     register is purely a weight + opsz + tracking shift, not a
+     separate family — keeps the system coherent. Plex Mono carries
+     code and numeric meta. */
+  --font-display: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono-stack: var(--font-mono), ui-monospace, "SF Mono", monospace;
 }
 
 /* ============================================================
@@ -89,8 +92,8 @@
     height: 100%;
     background: var(--color-bg-deep);
     color: var(--color-text-primary);
-    font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "opsz" 14;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

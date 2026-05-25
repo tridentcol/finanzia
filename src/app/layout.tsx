@@ -1,26 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import { NebulaBg } from "@/components/cosmos/nebula-bg";
 import { Providers } from "@/components/providers";
 import "@/styles/globals.css";
 
-const geistSans = Geist({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-sans",
   display: "swap",
+  axes: ["opsz"],
 });
 
-const geistMono = Geist_Mono({
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   display: "swap",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-  axes: ["opsz", "SOFT"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -68,9 +63,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased`}
-      >
+      <body className={`${dmSans.variable} ${plexMono.variable} antialiased`}>
         <NebulaBg />
         <Providers>{children}</Providers>
       </body>

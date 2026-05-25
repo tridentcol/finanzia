@@ -42,26 +42,26 @@
   .hero-card { padding: 32px; border-radius: 24px; background: var(--color-bg-glass); border: 1px solid var(--color-border-default); backdrop-filter: blur(24px); position: relative; overflow: hidden; }
   .hero-card::before { content: ""; position: absolute; inset: -1px; border-radius: 24px; padding: 1px; background: linear-gradient(135deg, rgba(123,91,255,0.4), transparent 50%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
   .hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-text-muted); }
-  .hero-value { font-family: "Fraunces", serif; font-weight: 200; font-size: 88px; line-height: 1; letter-spacing: -0.035em; margin: 8px 0; }
+  .hero-value { font-family: "DM Sans", sans-serif; font-weight: 200; font-size: 88px; line-height: 1; letter-spacing: -0.035em; margin: 8px 0; }
   .hero-value .currency { font-size: 32px; color: var(--color-text-secondary); margin-right: 8px; vertical-align: 18px; }
   .hero-delta { font-size: 14px; color: var(--color-mint-positive); }
   .hero-meta { display: flex; gap: 24px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--color-border-subtle); }
   .hero-meta .m { display: flex; flex-direction: column; gap: 4px; }
   .hero-meta .m-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); }
-  .hero-meta .m-value { font-family: "Fraunces", serif; font-weight: 300; font-size: 22px; letter-spacing: -0.02em; }
+  .hero-meta .m-value { font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 22px; letter-spacing: -0.02em; }
 
   .health-card { padding: 28px; border-radius: 24px; background: var(--color-bg-glass); border: 1px solid var(--color-border-default); backdrop-filter: blur(24px); display: flex; flex-direction: column; gap: 16px; }
   .health-ring-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   .health-ring-wrap svg { display: block; }
   .health-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .health-ring-text .score { font-family: "Fraunces", serif; font-weight: 300; font-size: 36px; }
+  .health-ring-text .score { font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 36px; }
   .health-ring-text .label { font-size: 11px; color: var(--color-text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
   .health-bars { display: flex; flex-direction: column; gap: 10px; }
   .health-bar { display: grid; grid-template-columns: 110px 1fr 50px; align-items: center; gap: 10px; }
   .health-bar .name { font-size: 12px; color: var(--color-text-secondary); }
   .health-bar .track { height: 4px; border-radius: 999px; background: var(--color-border-subtle); overflow: hidden; }
   .health-bar .fill { height: 100%; border-radius: 999px; background: var(--gradient-aurora); }
-  .health-bar .val { font-size: 12px; color: var(--color-text-primary); text-align: right; font-family: "Geist Mono", monospace; }
+  .health-bar .val { font-size: 12px; color: var(--color-text-primary); text-align: right; font-family: "IBM Plex Mono", monospace; }
 
   /* Insights row */
   .insights-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
@@ -89,7 +89,7 @@
   .insight .cta { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-nebula-cyan); margin-top: 4px; }
 
   /* Timeline river */
-  .river-section h3 { font-family: "Fraunces", serif; font-weight: 300; font-size: 28px; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .river-section h3 { font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 28px; letter-spacing: -0.02em; margin: 0 0 4px; }
   .river-section .sub { color: var(--color-text-muted); font-size: 13px; margin-bottom: 24px; }
 
   .river {
@@ -137,10 +137,10 @@
     opacity: 0.3;
     z-index: -1;
   }
-  .river-day .stamp .day-num { font-family: "Fraunces", serif; font-weight: 300; font-size: 24px; line-height: 1; letter-spacing: -0.02em; }
+  .river-day .stamp .day-num { font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 24px; line-height: 1; letter-spacing: -0.02em; }
   .river-day .stamp .day-name { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 4px; }
   .river-day .stamp .total { margin-top: 12px; font-size: 11px; color: var(--color-text-muted); }
-  .river-day .stamp .total strong { display: block; font-family: "Fraunces", serif; font-weight: 300; font-size: 18px; color: var(--color-text-primary); margin-top: 2px; }
+  .river-day .stamp .total strong { display: block; font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 18px; color: var(--color-text-primary); margin-top: 2px; }
 
   .tx-list { display: flex; flex-direction: column; gap: 8px; }
   .tx-list.left { text-align: right; }
@@ -158,7 +158,7 @@
   .tx .merchant { font-size: 13px; font-weight: 500; }
   .tx .meta { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
   .tx .body { flex: 1; min-width: 0; }
-  .tx .amount { font-family: "Geist Mono", monospace; font-size: 13px; font-weight: 500; letter-spacing: -0.01em; }
+  .tx .amount { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 500; letter-spacing: -0.01em; }
   .tx .amount.in { color: var(--color-mint-positive); }
   .tx .amount.out { color: var(--color-text-primary); }
 

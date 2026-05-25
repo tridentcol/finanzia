@@ -11,7 +11,7 @@ interface NumberDisplayProps {
   locale?: string;
   className?: string;
   animateChange?: boolean;
-  /** "display" uses the Fraunces serif for hero numbers, "ui" uses Geist Sans */
+  /** "display" = ligero + tracking apretado + opsz alto (hero numbers); "ui" = peso medio */
   variant?: "display" | "ui";
   /** Decimal places. Defaults to currency-aware (2 for fiat). */
   decimals?: number;
@@ -50,12 +50,16 @@ export function NumberDisplay({
     <motion.span
       data-numeric
       className={cn(
-        variant === "display"
-          ? "font-[family-name:var(--font-display)] font-light tracking-tight"
-          : "font-[family-name:var(--font-sans)] font-medium",
+        variant === "display" ? "font-light" : "font-medium",
         className,
       )}
-      style={{ fontVariantNumeric: "tabular-nums lining-nums" }}
+      style={{
+        fontVariantNumeric: "tabular-nums lining-nums",
+        // Display register: tighter tracking + larger optical size.
+        // UI register: default tracking.
+        letterSpacing: variant === "display" ? "-0.04em" : undefined,
+        fontVariationSettings: variant === "display" ? '"opsz" 40' : undefined,
+      }}
     >
       {animateChange ? rounded : format(value, { currency, locale, decimals, showSign })}
     </motion.span>

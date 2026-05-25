@@ -93,7 +93,7 @@ export default function Home() {
           MOCKUPS PARA APROBACIÓN
         </div>
 
-        <h1 className="font-[family-name:var(--font-display)] text-5xl font-extralight leading-[1.05] tracking-tight md:text-7xl lg:text-[88px]">
+        <h1 className="text-5xl font-light leading-[1.02] tracking-[-0.04em] md:text-7xl lg:text-[88px]">
           Tu universo financiero,
           <br />
           <span className="aurora-text">en un solo lienzo.</span>
