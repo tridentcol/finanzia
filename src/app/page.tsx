@@ -108,12 +108,23 @@ export default function Home() {
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button asChild variant="aurora" size="lg">
-            <a href="/mockups/index.html">Abrir índice de mockups →</a>
+            <a href="/mockups/type-lab.html">Type Lab · elegir tipografía →</a>
           </Button>
           <Button asChild variant="secondary" size="lg">
-            <a href="/mockups/02-timeline.html">Ir directo al Timeline</a>
+            <a href="/mockups/index.html">Abrir índice de mockups</a>
+          </Button>
+          <Button asChild variant="ghost" size="lg">
+            <a href="/mockups/02-timeline.html">Ir al Timeline</a>
           </Button>
         </div>
+
+        <p className="mt-6 text-sm text-[var(--color-text-muted)]">
+          ⤴ Si lo que no convence son las fuentes o los tamaños, empieza por el{" "}
+          <a href="/mockups/type-lab.html" className="underline decoration-dotted hover:text-[var(--color-text-secondary)]">
+            Type Lab
+          </a>
+          : seis combinaciones aplicadas al mismo contenido.
+        </p>
       </section>
 
       {/* Mockup grid */}

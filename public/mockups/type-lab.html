@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finanzia · Type Lab</title>
+<link rel="stylesheet" href="./_shared/cosmos.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<style>
+  body { padding: 0; }
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    padding: 20px 32px;
+    background: rgba(5,6,10,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border-subtle);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar h1 { font-family: "Fraunces", serif; font-weight: 300; font-size: 22px; margin: 0; letter-spacing: -0.02em; }
+  .topbar p { margin: 4px 0 0; font-size: 12px; color: var(--color-text-muted); }
+
+  .lab { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .intro { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+  .intro h2 { font-family: "Fraunces", serif; font-weight: 200; font-size: 48px; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 16px; }
+  .intro h2 em { font-style: normal; background: var(--gradient-aurora); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .intro p { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+
+  .variant {
+    border-radius: 24px;
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(20px);
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .variant-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(123,91,255,0.15);
+    color: #c8b9ff;
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .variant-name { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; margin: 0; font-family: "Geist", sans-serif; }
+  .variant-stack { font-family: "Geist Mono", monospace; font-size: 11px; color: var(--color-text-muted); margin-top: 4px; letter-spacing: 0.04em; }
+
+  /* Each preview uses isolated font stack */
+  .preview { padding-top: 12px; border-top: 1px solid var(--color-border-subtle); }
+  .preview .eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px; }
+  .preview .hero-number { line-height: 1; margin: 0 0 8px; }
+  .preview .hero-number .cur { vertical-align: super; margin-right: 6px; opacity: 0.6; }
+  .preview .delta { font-size: 14px; color: var(--color-mint-positive); margin-bottom: 24px; font-variant-numeric: tabular-nums lining-nums; }
+  .preview .title { line-height: 1.05; margin: 0 0 12px; letter-spacing: -0.025em; }
+  .preview .subtitle { font-size: 15px; color: var(--color-text-secondary); line-height: 1.55; margin: 0 0 24px; }
+
+  .preview .tx-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.025); border-radius: 10px; border: 1px solid var(--color-border-subtle); margin-bottom: 8px; }
+  .preview .tx-row .merchant { font-size: 13px; }
+  .preview .tx-row .meta { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+  .preview .tx-row .amount { font-variant-numeric: tabular-nums lining-nums; font-size: 13px; }
+
+  .preview .meta-row { display: flex; gap: 20px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); margin-top: 12px; }
+  .preview .meta-row .m-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); }
+  .preview .meta-row .m-value { font-variant-numeric: tabular-nums lining-nums; margin-top: 4px; }
+
+  /* —— VARIANT A: ACTUAL (Fraunces + Geist + Geist Mono) —— */
+  .v-a { font-family: "Geist", sans-serif; }
+  .v-a .eyebrow { color: var(--color-text-muted); font-family: "Geist", sans-serif; }
+  .v-a .hero-number { font-family: "Fraunces", serif; font-weight: 200; font-size: 76px; letter-spacing: -0.035em; }
+  .v-a .hero-number .cur { font-family: "Fraunces", serif; font-size: 28px; }
+  .v-a .title { font-family: "Fraunces", serif; font-weight: 300; font-size: 32px; }
+  .v-a .subtitle { font-family: "Geist", sans-serif; }
+  .v-a .tx-row .merchant { font-family: "Geist", sans-serif; font-weight: 500; }
+  .v-a .tx-row .amount { font-family: "Geist Mono", monospace; font-weight: 500; }
+  .v-a .meta-row .m-value { font-family: "Fraunces", serif; font-weight: 300; font-size: 22px; }
+  .v-a .delta { font-family: "Geist Mono", monospace; }
+
+  /* —— VARIANT B: ALL GEIST (sans only) —— */
+  .v-b { font-family: "Geist", sans-serif; }
+  .v-b .eyebrow { color: var(--color-text-muted); }
+  .v-b .hero-number { font-family: "Geist", sans-serif; font-weight: 200; font-size: 76px; letter-spacing: -0.04em; font-variant-numeric: tabular-nums lining-nums; }
+  .v-b .hero-number .cur { font-weight: 300; font-size: 28px; }
+  .v-b .title { font-family: "Geist", sans-serif; font-weight: 300; font-size: 32px; letter-spacing: -0.03em; }
+  .v-b .subtitle { font-family: "Geist", sans-serif; }
+  .v-b .tx-row .merchant { font-weight: 500; }
+  .v-b .tx-row .amount { font-family: "Geist Mono", monospace; font-weight: 500; }
+  .v-b .meta-row .m-value { font-weight: 300; font-size: 22px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; }
+  .v-b .delta { font-family: "Geist Mono", monospace; }
+
+  /* —— VARIANT C: INSTRUMENT SERIF + INTER —— */
+  .v-c { font-family: "Inter", sans-serif; }
+  .v-c .eyebrow { color: var(--color-text-muted); font-weight: 500; }
+  .v-c .hero-number { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 84px; letter-spacing: -0.025em; }
+  .v-c .hero-number .cur { font-size: 30px; }
+  .v-c .title { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 36px; letter-spacing: -0.015em; }
+  .v-c .title em { font-style: italic; }
+  .v-c .subtitle { font-family: "Inter", sans-serif; }
+  .v-c .tx-row .merchant { font-weight: 500; }
+  .v-c .tx-row .amount { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 12px; }
+  .v-c .meta-row .m-value { font-family: "Instrument Serif", serif; font-size: 24px; font-weight: 400; }
+  .v-c .delta { font-family: "JetBrains Mono", monospace; }
+
+  /* —— VARIANT D: BRICOLAGE + INTER (geometric, no serif) —— */
+  .v-d { font-family: "Inter", sans-serif; }
+  .v-d .eyebrow { color: var(--color-text-muted); font-weight: 500; }
+  .v-d .hero-number { font-family: "Bricolage Grotesque", sans-serif; font-weight: 300; font-size: 78px; letter-spacing: -0.045em; font-variant-numeric: tabular-nums lining-nums; }
+  .v-d .hero-number .cur { font-weight: 400; font-size: 28px; }
+  .v-d .title { font-family: "Bricolage Grotesque", sans-serif; font-weight: 400; font-size: 32px; letter-spacing: -0.035em; }
+  .v-d .subtitle { font-family: "Inter", sans-serif; }
+  .v-d .tx-row .merchant { font-weight: 500; }
+  .v-d .tx-row .amount { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 12px; }
+  .v-d .meta-row .m-value { font-family: "Bricolage Grotesque", sans-serif; font-weight: 400; font-size: 22px; letter-spacing: -0.025em; font-variant-numeric: tabular-nums lining-nums; }
+  .v-d .delta { font-family: "JetBrains Mono", monospace; }
+
+  /* —— VARIANT E: NEWSREADER + DM SANS (warm editorial) —— */
+  .v-e { font-family: "DM Sans", sans-serif; }
+  .v-e .eyebrow { color: var(--color-text-muted); font-weight: 500; }
+  .v-e .hero-number { font-family: "Newsreader", serif; font-weight: 200; font-size: 82px; letter-spacing: -0.025em; font-variation-settings: "opsz" 72; }
+  .v-e .hero-number .cur { font-size: 30px; }
+  .v-e .title { font-family: "Newsreader", serif; font-weight: 300; font-size: 36px; letter-spacing: -0.018em; font-variation-settings: "opsz" 48; }
+  .v-e .subtitle { font-family: "DM Sans", sans-serif; }
+  .v-e .tx-row .merchant { font-weight: 500; }
+  .v-e .tx-row .amount { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 12px; }
+  .v-e .meta-row .m-value { font-family: "Newsreader", serif; font-size: 24px; font-weight: 300; }
+  .v-e .delta { font-family: "IBM Plex Mono", monospace; }
+
+  /* —— VARIANT F: DM SANS only (calm modern sans) —— */
+  .v-f { font-family: "DM Sans", sans-serif; }
+  .v-f .eyebrow { color: var(--color-text-muted); font-weight: 500; }
+  .v-f .hero-number { font-family: "DM Sans", sans-serif; font-weight: 300; font-size: 78px; letter-spacing: -0.04em; font-variation-settings: "opsz" 40; font-variant-numeric: tabular-nums lining-nums; }
+  .v-f .hero-number .cur { font-weight: 400; font-size: 28px; }
+  .v-f .title { font-family: "DM Sans", sans-serif; font-weight: 400; font-size: 32px; letter-spacing: -0.03em; }
+  .v-f .subtitle { font-family: "DM Sans", sans-serif; }
+  .v-f .tx-row .merchant { font-weight: 500; }
+  .v-f .tx-row .amount { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 12px; }
+  .v-f .meta-row .m-value { font-family: "DM Sans", sans-serif; font-weight: 400; font-size: 22px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; }
+  .v-f .delta { font-family: "IBM Plex Mono", monospace; }
+
+  .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-text-secondary); }
+  .nav-back:hover { color: var(--color-text-primary); }
+</style>
+</head>
+<body>
+  <div class="mockup-label">Type Lab</div>
+  <div class="nebula"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+  <div class="topbar">
+    <div>
+      <h1>Type Lab</h1>
+      <p>Misma información, seis combinaciones tipográficas distintas. Elige la que mejor encaja con el carácter de Finanzia.</p>
+    </div>
+    <a class="nav-back" href="/">← Volver al índice</a>
+  </div>
+
+  <div class="lab">
+    <div class="intro">
+      <h2>Encuentra la voz <em>tipográfica</em> correcta.</h2>
+      <p>Cada bloque renderiza el mismo contenido: un número grande, un título de página, un subtítulo, dos filas de transacción y los metadatos de patrimonio. Mira proporciones, ritmo y el «aire» que dejan los caracteres. Sin decidir nada todavía: dime cuáles te resuenan y cuáles descartas.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- VARIANT A: ACTUAL -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante A · Actual</span>
+          <h3 class="variant-name">Fraunces · Geist · Geist Mono</h3>
+          <div class="variant-stack">display: serif editorial 200 · ui: tech sans · num: mono geist</div>
+        </div>
+        <div class="preview v-a">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu río de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT B: ALL GEIST -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante B · Unificada tech</span>
+          <h3 class="variant-name">Geist · Geist · Geist Mono</h3>
+          <div class="variant-stack">display: geist 200 · ui: geist 400/500 · num: geist mono · vibe: Linear, Vercel</div>
+        </div>
+        <div class="preview v-b">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu río de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT C: INSTRUMENT + INTER -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante C · Editorial moderna</span>
+          <h3 class="variant-name">Instrument Serif · Inter · JetBrains Mono</h3>
+          <div class="variant-stack">display: serif italic-friendly · ui: workhorse · num: code-feel · vibe: Stripe, Linear, Mercury</div>
+        </div>
+        <div class="preview v-c">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu <em>río</em> de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT D: BRICOLAGE + INTER -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante D · Geométrica con carácter</span>
+          <h3 class="variant-name">Bricolage Grotesque · Inter · JetBrains Mono</h3>
+          <div class="variant-stack">display: grotesk display · ui: workhorse · num: code-feel · vibe: Arc, contemporary indie</div>
+        </div>
+        <div class="preview v-d">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu río de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT E: NEWSREADER + DM SANS -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante E · Cálida editorial</span>
+          <h3 class="variant-name">Newsreader · DM Sans · IBM Plex Mono</h3>
+          <div class="variant-stack">display: serif cálida · ui: sans amistosa · num: mono cuadrada · vibe: New York Times, premium notion</div>
+        </div>
+        <div class="preview v-e">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu río de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT F: DM SANS ONLY -->
+      <div class="variant">
+        <div>
+          <span class="variant-tag">Variante F · Sans calmada</span>
+          <h3 class="variant-name">DM Sans · DM Sans · IBM Plex Mono</h3>
+          <div class="variant-stack">display: dm sans 300 · ui: dm sans · num: plex mono · vibe: Notion premium, Things 3</div>
+        </div>
+        <div class="preview v-f">
+          <div class="eyebrow">Tu patrimonio · 25 mayo 2026</div>
+          <h2 class="hero-number" data-numeric><span class="cur">€</span>47.382,18</h2>
+          <div class="delta">↗ +€ 2.140,40 este mes · +4,7 %</div>
+          <h3 class="title">Tu río de mayo</h3>
+          <p class="subtitle">Cinco días recientes y proyecciones de los próximos. Los puntos brillantes son insights que aparecen donde importan.</p>
+          <div class="tx-row">
+            <div><div class="merchant">Casa Mariano</div><div class="meta">Restaurantes · Sáb 24</div></div>
+            <div class="amount">−€ 84,00</div>
+          </div>
+          <div class="tx-row">
+            <div><div class="merchant">Nómina · Cliente A</div><div class="meta">Ingresos · Vie 23</div></div>
+            <div class="amount" style="color: var(--color-mint-positive)">+€ 1.900,00</div>
+          </div>
+          <div class="meta-row">
+            <div><div class="m-label">Líquido</div><div class="m-value">€ 12.408</div></div>
+            <div><div class="m-label">Ahorro</div><div class="m-value">€ 28.774</div></div>
+            <div><div class="m-label">Inversión</div><div class="m-value">€ 8.100</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 64px; padding: 28px; border-radius: 18px; background: rgba(123,91,255,0.06); border: 1px solid rgba(123,91,255,0.2); max-width: 720px; margin-left: auto; margin-right: auto;">
+      <div style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #c8b9ff; margin-bottom: 8px;">Sobre el tamaño</div>
+      <div style="font-family: 'Fraunces', serif; font-weight: 300; font-size: 22px; letter-spacing: -0.02em; margin-bottom: 12px;">Si el problema es la <em>escala</em>, no la familia, dímelo aparte.</div>
+      <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin: 0;">El display actual va de 64 a 96 px. Puedo bajarlo a un rango 48–72 px (más sobrio, menos «editorial») o subirlo a 96–128 px (más statement) sin tocar la familia. Probamos una variante de tamaños cuando elijas familia.</p>
+    </div>
+  </div>
+</body>
+</html>
