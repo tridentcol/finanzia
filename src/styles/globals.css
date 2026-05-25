@@ -2,47 +2,53 @@
 
 /* ============================================================
    FINANZIA — Cosmos design tokens
-   Dark theme is the canonical look; light theme is supported as
-   a secondary surface for users who request it.
+   Tokens mirror the design bundle (Claude Design handoff).
+   Dark theme is the canonical look.
    ============================================================ */
 
 @theme {
-  /* —— Surfaces (dark) —— */
+  /* Surfaces */
   --color-bg-deep: #05060a;
   --color-bg-base: #0a0b14;
   --color-bg-elevated: #0f1120;
   --color-bg-glass: rgba(255, 255, 255, 0.03);
   --color-bg-glass-strong: rgba(255, 255, 255, 0.06);
 
-  /* —— Borders —— */
+  /* Borders */
   --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-border-default: rgba(255, 255, 255, 0.1);
   --color-border-strong: rgba(255, 255, 255, 0.16);
 
-  /* —— Text —— */
+  /* Text */
   --color-text-primary: #f0f2ff;
   --color-text-secondary: #a8adc9;
   --color-text-muted: #6b6f8d;
   --color-text-inverse: #05060a;
 
-  /* —— Nebula accents —— */
+  /* Nebula accents */
   --color-nebula-violet: #7b5bff;
   --color-nebula-blue: #4f8cff;
   --color-nebula-cyan: #5fe4ff;
   --color-nebula-rose: #ff5b9e;
 
-  /* —— Semantic —— */
+  /* Semantic */
   --color-mint-positive: #5de2a2;
   --color-coral-negative: #ff6e7a;
   --color-amber-warning: #ffb547;
   --color-azure-info: #5fb8ff;
 
-  /* —— Gradients (referenced via var()) —— */
+  /* Gradients */
   --gradient-aurora: linear-gradient(135deg, #7b5bff 0%, #4f8cff 50%, #5fe4ff 100%);
   --gradient-deep-space: radial-gradient(ellipse at top, #1a1735 0%, #05060a 60%);
-  --gradient-nebula-rose: linear-gradient(135deg, #ff5b9e 0%, #7b5bff 100%);
 
-  /* —— Radii —— */
+  /* Glows / shadows */
+  --shadow-glow-violet: 0 0 40px -10px rgba(123, 91, 255, 0.5);
+  --shadow-glow-mint: 0 0 32px -8px rgba(93, 226, 162, 0.4);
+  --shadow-glow-coral: 0 0 32px -8px rgba(255, 110, 122, 0.4);
+  --shadow-elev:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(0, 0, 0, 0.5);
+
+  /* Radii */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -50,33 +56,19 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* —— Shadows / Glows —— */
-  --shadow-elevation:
-    0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(0, 0, 0, 0.5);
-  --shadow-elevation-lg:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 40px 120px -32px rgba(0, 0, 0, 0.7);
-  --shadow-glow-violet: 0 0 40px -10px rgba(123, 91, 255, 0.5);
-  --shadow-glow-mint: 0 0 32px -8px rgba(93, 226, 162, 0.4);
-  --shadow-glow-coral: 0 0 32px -8px rgba(255, 110, 122, 0.4);
-
-  /* —— Motion —— */
+  /* Motion */
   --ease-cosmos: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-orbit: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 180ms;
   --duration-base: 280ms;
   --duration-slow: 480ms;
 
-  /* —— Typography (loaded via next/font in layout) ——
-     Display and UI share the same family (DM Sans). The "display"
-     register is purely a weight + opsz + tracking shift, not a
-     separate family — keeps the system coherent. Plex Mono carries
-     code and numeric meta. */
+  /* Typography — DM Sans + IBM Plex Mono via next/font */
   --font-display: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono-stack: var(--font-mono), ui-monospace, "SF Mono", monospace;
 }
 
 /* ============================================================
-   Base layer — global resets aligned to the cosmos palette.
+   Base
    ============================================================ */
 
 @layer base {
@@ -99,12 +91,6 @@
     text-rendering: optimizeLegibility;
   }
 
-  body {
-    background-image: var(--gradient-deep-space);
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-
   ::selection {
     background: rgba(123, 91, 255, 0.35);
     color: var(--color-text-primary);
@@ -115,50 +101,58 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
-
-  /* Hide focus ring for mouse users while preserving keyboard focus */
   :focus:not(:focus-visible) {
     outline: none;
   }
 
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+  }
+
   input,
   textarea,
-  select,
-  button {
+  select {
     font: inherit;
     color: inherit;
   }
 
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Tabular figures for any numeric display by default */
-  .tabular,
+  /* Tabular numerals on everything that opts in */
+  .num,
+  .tnum,
   [data-numeric] {
     font-variant-numeric: tabular-nums lining-nums;
   }
 }
 
 /* ============================================================
-   Utility helpers specific to the cosmos system.
-   Kept minimal — most variation is via component composition.
+   Typography utilities
    ============================================================ */
 
-@utility glass {
-  background: var(--color-bg-glass);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid var(--color-border-subtle);
+@utility h-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 40;
+  letter-spacing: -0.038em;
+  line-height: 1.02;
 }
 
-@utility glass-strong {
-  background: var(--color-bg-glass-strong);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid var(--color-border-default);
+@utility mono {
+  font-family: var(--font-mono-stack);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-muted);
 }
 
 @utility aurora-text {
@@ -166,22 +160,608 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-@utility hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+@utility aurora-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(123, 91, 255, 0.5) 30%,
+    rgba(95, 228, 255, 0.5) 70%,
+    transparent 100%
+  );
+  border: none;
 }
 
 /* ============================================================
-   Motion preferences — collapse decorative animation when the
-   user requests reduced motion.
+   Buttons (.btn / .btn-aurora / .btn-primary / .btn-secondary
+   / .btn-ghost / .btn-icon / .btn-sm / .btn-lg)
+   ============================================================ */
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition:
+    transform 0.18s var(--ease-cosmos),
+    background 0.18s,
+    box-shadow 0.18s;
+  white-space: nowrap;
+}
+
+@utility btn-sm {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+@utility btn-lg {
+  height: 48px;
+  padding: 0 24px;
+  font-size: 15px;
+}
+
+@utility btn-aurora {
+  background: var(--gradient-aurora);
+  color: #fff;
+  box-shadow:
+    var(--shadow-glow-violet),
+    0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  font-weight: 600;
+}
+
+@utility btn-primary {
+  background: var(--color-text-primary);
+  color: var(--color-bg-deep);
+  box-shadow: var(--shadow-elev);
+  font-weight: 600;
+}
+
+@utility btn-secondary {
+  background: var(--color-bg-glass);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+}
+
+@utility btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+@utility btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* Plain CSS for hover states (utilities don't support :hover natively) */
+.btn-aurora:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 60px -10px rgba(123, 91, 255, 0.7),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+.btn-secondary:hover {
+  background: var(--color-bg-glass-strong);
+}
+.btn-ghost:hover {
+  background: var(--color-bg-glass);
+  color: var(--color-text-primary);
+}
+.btn-icon.btn-sm {
+  width: 32px;
+  height: 32px;
+}
+
+/* ============================================================
+   Cards
+   ============================================================ */
+
+@utility glow-card {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.glow-card.lg {
+  border-radius: 24px;
+  padding: 32px;
+}
+.glow-card.aurora-edge {
+  background:
+    linear-gradient(135deg, rgba(123, 91, 255, 0.08) 0%, transparent 50%),
+    var(--color-bg-glass);
+  border: 1px solid var(--color-border-default);
+}
+
+/* ============================================================
+   Pills / Tags
+   ============================================================ */
+
+@utility pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  background: var(--color-bg-glass-strong);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+  white-space: nowrap;
+}
+
+.pill.positive {
+  color: var(--color-mint-positive);
+  background: rgba(93, 226, 162, 0.1);
+  border-color: rgba(93, 226, 162, 0.25);
+}
+.pill.negative {
+  color: var(--color-coral-negative);
+  background: rgba(255, 110, 122, 0.1);
+  border-color: rgba(255, 110, 122, 0.25);
+}
+.pill.warning {
+  color: var(--color-amber-warning);
+  background: rgba(255, 181, 71, 0.1);
+  border-color: rgba(255, 181, 71, 0.25);
+}
+.pill.info {
+  color: var(--color-azure-info);
+  background: rgba(95, 184, 255, 0.1);
+  border-color: rgba(95, 184, 255, 0.25);
+}
+.pill.violet {
+  color: var(--color-nebula-violet);
+  background: rgba(123, 91, 255, 0.14);
+  border-color: rgba(123, 91, 255, 0.3);
+}
+.pill.dot {
+  padding-left: 8px;
+}
+.pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ============================================================
+   Kbd
+   ============================================================ */
+
+@utility kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  min-width: 20px;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border-default);
+  font-family: var(--font-mono-stack);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   Star (insight avatar)
+   ============================================================ */
+
+@utility star {
+  position: relative;
+  border-radius: 50%;
+  background: var(--gradient-aurora);
+  box-shadow:
+    0 0 20px -2px rgba(123, 91, 255, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.star::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  filter: blur(6px);
+}
+.star.warning {
+  background: linear-gradient(135deg, #ffb547 0%, #ff6e7a 100%);
+  box-shadow:
+    0 0 20px -2px rgba(255, 181, 71, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+.star.positive {
+  background: linear-gradient(135deg, #5de2a2 0%, #5fb8ff 100%);
+  box-shadow:
+    0 0 20px -2px rgba(93, 226, 162, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* ============================================================
+   Inputs
+   ============================================================ */
+
+@utility input {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+.input:focus {
+  border-color: var(--color-nebula-violet);
+  box-shadow: 0 0 0 3px rgba(123, 91, 255, 0.25);
+}
+
+/* ============================================================
+   App shell (Sidebar + Topbar)
+   ============================================================ */
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  border-right: 1px solid var(--color-border-subtle);
+  background: rgba(10, 11, 20, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.sidebar-logo-mark {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: var(--gradient-aurora);
+  box-shadow: var(--shadow-glow-violet);
+}
+.sidebar-logo-mark::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 4px;
+  background: var(--color-bg-deep);
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-group-label {
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 4px 12px 6px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  transition:
+    background 0.15s,
+    color 0.15s;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: var(--color-bg-glass);
+  color: var(--color-text-primary);
+}
+.nav-item.active {
+  background: var(--color-bg-glass-strong);
+  border-color: var(--color-border-default);
+  color: var(--color-text-primary);
+}
+.nav-item .badge {
+  margin-left: auto;
+  background: rgba(123, 91, 255, 0.18);
+  color: var(--color-nebula-violet);
+  font-size: 10px;
+  font-family: var(--font-mono-stack);
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(123, 91, 255, 0.3);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-glass);
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5fe4ff 0%, #7b5bff 100%);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 64px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: rgba(10, 11, 20, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.breadcrumbs {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.breadcrumbs .sep {
+  margin: 0 8px;
+  opacity: 0.5;
+}
+.breadcrumbs .current {
+  color: var(--color-text-primary);
+}
+
+.cmd-trigger {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 320px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+.cmd-trigger:hover {
+  background: var(--color-bg-glass-strong);
+  color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   Misc
+   ============================================================ */
+
+.divider {
+  height: 1px;
+  background: var(--color-border-subtle);
+  border: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Lucide-ish icon sizing */
+.icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.6;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.icon-sm {
+  width: 14px;
+  height: 14px;
+}
+.icon-lg {
+  width: 20px;
+  height: 20px;
+}
+.icon-xl {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================================
+   Nebula canvas (per-screen background)
+   ============================================================ */
+
+.nebula-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nebula-deep {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, #1a1735 0%, #05060a 60%);
+}
+
+.nebula-blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  filter: blur(70px);
+  opacity: 0.55;
+}
+.nebula-blob.violet {
+  width: 540px;
+  height: 540px;
+  background: radial-gradient(circle, rgba(123, 91, 255, 0.7) 0%, transparent 70%);
+  top: -120px;
+  left: -120px;
+  animation: drift1 32s ease-in-out infinite;
+}
+.nebula-blob.cyan {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.55) 0%, transparent 70%);
+  top: 30%;
+  right: -100px;
+  animation: drift2 36s ease-in-out infinite;
+}
+.nebula-blob.rose {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 91, 158, 0.45) 0%, transparent 70%);
+  bottom: -160px;
+  left: 30%;
+  animation: drift3 40s ease-in-out infinite;
+}
+@keyframes drift1 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(40px, 30px);
+  }
+}
+@keyframes drift2 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-50px, 20px);
+  }
+}
+@keyframes drift3 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, -40px);
+  }
+}
+
+.nebula-stars {
+  position: absolute;
+  inset: 0;
+}
+.nebula-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle 6s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.nebula-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 80% at 50% 50%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================================
+   Motion preferences
    ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
+  .nebula-blob,
+  .nebula-star {
+    animation: none !important;
+  }
   *,
   *::before,
   *::after {

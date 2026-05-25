@@ -1,220 +1,213 @@
+import { cloneElement } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { I } from "@/components/icons";
+import { NebulaBg } from "@/components/cosmos/nebula-bg";
+import { Sparkline } from "@/components/cosmos/sparkline";
+import { Star } from "@/components/cosmos/star";
+import { Logo } from "@/components/layout/logo";
 
-const mockups = [
-  {
-    id: "01",
-    slug: "01-landing",
-    title: "Landing pública",
-    desc: "Hero editorial, badge orbit, preview con sparkline aurora y mini-insights, manifiesto en tres promesas.",
-  },
-  {
-    id: "02",
-    slug: "02-timeline",
-    title: "Timeline · home de la app",
-    desc: "Río financiero pasado + proyectado, hero number, salud financiera y cards proactivas. La pantalla más importante.",
-  },
-  {
-    id: "03",
-    slug: "03-command-bar",
-    title: "Command Bar (⌘K)",
-    desc: "Cuatro modos en uno: acciones, navegación, búsqueda y Ask AI con contexto cifrado.",
-  },
-  {
-    id: "04",
-    slug: "04-plans",
-    title: "Planes de ahorro",
-    desc: "Sistema solar de metas con orbital rings, ETAs realistas y sugerencias del coach para reasignar aportes.",
-  },
-  {
-    id: "05",
-    slug: "05-coach-ia",
-    title: "Coach IA",
-    desc: "Conversación con Claude, simulación financiera ejecutable y panel «lo que sé de ti» transparente con cache hit.",
-  },
-  {
-    id: "06",
-    slug: "06-onboarding",
-    title: "Onboarding",
-    desc: "Wizard de 8 pasos. Paso 4 mostrado: selección de metas con justificación del «por qué te lo pedimos».",
-  },
-  {
-    id: "07",
-    slug: "07-login",
-    title: "Entrada / Crear cuenta",
-    desc: "Magic link + Google/Apple, constelación animada en SVG y manifiesto a la izquierda.",
-  },
-];
+export const metadata = { title: "Tu universo financiero" };
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="relative min-h-screen px-6 py-24 md:px-16 lg:px-24">
-      {/* Header */}
-      <header className="mx-auto flex max-w-6xl items-center justify-between pb-12">
-        <Link href="/" className="inline-flex items-center gap-3">
-          <span className="relative inline-flex h-8 w-8 items-center justify-center">
-            <span
-              className="absolute inset-0 rounded-full blur-md opacity-60"
-              style={{ background: "var(--gradient-aurora)" }}
-            />
-            <span
-              className="relative inline-block h-3 w-3 rounded-full"
-              style={{ background: "var(--gradient-aurora)" }}
-            />
-          </span>
-          <span className="font-[family-name:var(--font-display)] text-xl font-light tracking-tight">
-            finanzia
-          </span>
-        </Link>
-        <div className="hidden items-center gap-6 text-sm text-[var(--color-text-secondary)] md:flex">
-          <span className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
-            Beta privada · Diseño en revisión
-          </span>
-        </div>
-      </header>
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      <NebulaBg seed={11} />
 
-      {/* Hero */}
-      <section className="mx-auto max-w-4xl text-center">
-        <div
-          className="mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs tracking-widest"
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Header */}
+        <header
           style={{
-            background: "rgba(123,91,255,0.1)",
-            borderColor: "rgba(123,91,255,0.25)",
-            color: "#cbbfff",
+            display: "flex",
+            alignItems: "center",
+            padding: "24px 56px",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            background: "rgba(5,6,10,0.5)",
+            borderBottom: "1px solid var(--color-border-subtle)",
           }}
         >
-          <span
-            className="h-1.5 w-1.5 rounded-full"
+          <Logo size={17} />
+          <nav style={{ display: "flex", gap: 28, margin: "0 auto", fontSize: 13, color: "var(--color-text-secondary)" }}>
+            <a style={{ color: "var(--color-text-primary)" }}>Concepto</a>
+            <a>Cómo funciona</a>
+            <a>Planes</a>
+            <a>Manifiesto</a>
+          </nav>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Link href="/login" className="btn btn-ghost btn-sm">Entrar</Link>
+            <Link href="/onboarding/goals" className="btn btn-aurora btn-sm">Empezar</Link>
+          </div>
+        </header>
+
+        {/* Hero */}
+        <section style={{ padding: "64px 56px 32px", textAlign: "center" }}>
+          <div className="pill dot violet" style={{ marginBottom: 24, height: 28, padding: "0 14px" }}>
+            <span className="dot" style={{ background: "#7B5BFF" }} />
+            <span style={{ color: "var(--color-text-secondary)" }}>Tu copiloto financiero con IA · Beta privada</span>
+          </div>
+          <h1 className="h-display" style={{ fontSize: 84, margin: "0 auto 24px", maxWidth: 980, letterSpacing: "-0.04em" }}>
+            Tu universo financiero,<br />
+            <span className="aurora-text">en un solo lienzo.</span>
+          </h1>
+          <p style={{ fontSize: 18, lineHeight: 1.55, color: "var(--color-text-secondary)", maxWidth: 640, margin: "0 auto 32px" }}>
+            Finanzia une tus cuentas, tus metas y tu IA en un único lienzo navegable. Insights accionables, no gráficos por defecto.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+            <Link href="/onboarding/goals" className="btn btn-aurora btn-lg">
+              Pedir acceso anticipado {I.arrowRight}
+            </Link>
+            <Link href="/app/timeline" className="btn btn-secondary btn-lg">
+              Ver concepto
+            </Link>
+          </div>
+        </section>
+
+        {/* Hero preview card */}
+        <section style={{ padding: "24px 56px 80px" }}>
+          <div
+            className="glow-card aurora-edge lg"
             style={{
-              background: "var(--color-nebula-violet)",
-              boxShadow: "0 0 8px rgba(123,91,255,0.8)",
+              display: "grid",
+              gridTemplateColumns: "1.1fr 1fr",
+              gap: 56,
+              alignItems: "center",
+              maxWidth: 1120,
+              margin: "0 auto",
+              padding: "40px 44px",
             }}
-          />
-          MOCKUPS PARA APROBACIÓN
-        </div>
-
-        <h1 className="text-5xl font-light leading-[1.02] tracking-[-0.04em] md:text-7xl lg:text-[88px]">
-          Tu universo financiero,
-          <br />
-          <span className="aurora-text">en un solo lienzo.</span>
-        </h1>
-
-        <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)]">
-          Finanzia es un lienzo navegable donde tu dinero fluye como un río, las categorías brillan
-          como constelaciones y la IA actúa como un copiloto silencioso. Estas son las siete
-          pantallas clave del concepto, en HTML/CSS puro, para que valides el sistema visual
-          «cosmos» antes de que lo materialice en React.
-        </p>
-
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button asChild variant="aurora" size="lg">
-            <a href="/mockups/type-lab.html">Type Lab · elegir tipografía →</a>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <a href="/mockups/index.html">Abrir índice de mockups</a>
-          </Button>
-          <Button asChild variant="ghost" size="lg">
-            <a href="/mockups/02-timeline.html">Ir al Timeline</a>
-          </Button>
-        </div>
-
-        <p className="mt-6 text-sm text-[var(--color-text-muted)]">
-          ⤴ Si lo que no convence son las fuentes o los tamaños, empieza por el{" "}
-          <a href="/mockups/type-lab.html" className="underline decoration-dotted hover:text-[var(--color-text-secondary)]">
-            Type Lab
-          </a>
-          : seis combinaciones aplicadas al mismo contenido.
-        </p>
-      </section>
-
-      {/* Mockup grid */}
-      <section className="mx-auto mt-24 max-w-6xl">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <div className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
-              Las siete pantallas
-            </div>
-            <h2 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-light tracking-tight">
-              Para revisar y comentar.
-            </h2>
-          </div>
-          <a
-            href="/mockups/index.html"
-            className="hidden text-sm text-[var(--color-nebula-cyan)] hover:underline md:inline"
           >
-            Ver en galería completa →
-          </a>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {mockups.map((m) => (
-            <a
-              key={m.id}
-              href={`/mockups/${m.slug}.html`}
-              className="group glass relative flex flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-border-strong)]"
-              style={{ minHeight: 220 }}
-            >
-              <div className="mb-6 flex items-center justify-between">
-                <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest text-[var(--color-text-muted)]">
-                  {m.id}
-                </span>
-                <span className="text-[var(--color-text-muted)] transition-all group-hover:text-[var(--color-nebula-cyan)] group-hover:translate-x-1">
-                  →
-                </span>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>Tu patrimonio · 25 mayo 2026</div>
+              <div className="h-display tnum" style={{ fontSize: 80, marginBottom: 12, letterSpacing: "-0.04em" }}>
+                <span className="aurora-text" style={{ fontSize: 36, verticalAlign: "top", display: "inline-block", marginTop: 12, marginRight: 4 }}>€</span>
+                <span className="aurora-text">47.382</span>
+                <span className="aurora-text" style={{ fontSize: 44 }}>,18</span>
               </div>
-              <h3 className="font-[family-name:var(--font-display)] text-2xl font-light tracking-tight">
-                {m.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                {m.desc}
-              </p>
-            </a>
-          ))}
-        </div>
-      </section>
+              <div className="mono" style={{ color: "var(--color-mint-positive)", fontSize: 13, marginBottom: 28 }}>
+                ↗ +€ 2.140,40 este mes · +4,7 %
+              </div>
+              <Sparkline w={420} h={72} gradId="hero-spark" />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <MiniInsight kind="default" title="Tu río fluye en positivo" body="+4,7 % de patrimonio neto este mes." />
+              <MiniInsight kind="warning" title="Una constelación se calienta" body="Restaurantes 32 % por encima de tu media." />
+              <MiniInsight kind="positive" title="Plan Japón al 41 %" body="A este ritmo, listo para marzo de 2027." />
+            </div>
+          </div>
+        </section>
 
-      {/* Notes */}
-      <section className="mx-auto mt-24 max-w-3xl">
-        <div
-          className="rounded-2xl border p-8"
+        {/* Features */}
+        <section style={{ padding: "32px 56px 80px", maxWidth: 1240, margin: "0 auto" }}>
+          <div className="eyebrow" style={{ textAlign: "center", marginBottom: 18 }}>
+            Más allá del dashboard
+          </div>
+          <h2 className="h-display" style={{ fontSize: 48, textAlign: "center", marginBottom: 56, letterSpacing: "-0.035em" }}>
+            Tres formas nuevas de mirar tu dinero.
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+            {[
+              { icon: I.river, title: "Río temporal", body: "Navega tu pasado y proyecta tu futuro en una sola línea de tiempo continua." },
+              { icon: I.sparkle, title: "Constelación de categorías", body: "Tus categorías brillan como estrellas; las que se calientan saltan a la vista." },
+              { icon: I.bot, title: "Cartas proactivas", body: "La IA aparece sólo cuando tiene algo que aportar. Silencio cuando todo va bien." },
+            ].map((f, i) => (
+              <div key={i} className="glow-card" style={{ padding: 24 }}>
+                <span
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: "rgba(123,91,255,0.14)",
+                    color: "var(--color-nebula-violet)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 18,
+                    border: "1px solid rgba(123,91,255,0.25)",
+                  }}
+                >
+                  {cloneElement(f.icon, { className: "icon icon-lg" })}
+                </span>
+                <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontSize: 14, color: "var(--color-text-secondary)", lineHeight: 1.55 }}>{f.body}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Three promises */}
+        <section style={{ padding: "32px 56px 80px", maxWidth: 1240, margin: "0 auto" }}>
+          <div className="eyebrow" style={{ marginBottom: 18 }}>Tres promesas</div>
+          <h2 className="h-display" style={{ fontSize: 44, marginBottom: 40, letterSpacing: "-0.035em", maxWidth: 720 }}>
+            Lo que Finanzia hace por ti, sin pedirlo dos veces.
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+            {[
+              { n: "01", title: "Decisiones inteligentes", body: "No te enseña gráficos. Te dice qué hacer y por qué, con números encima." },
+              { n: "02", title: "Aire, no ruido", body: "Una sola cifra por pantalla. El resto, sólo si la pides." },
+              { n: "03", title: "Privacidad por defecto", body: "Tus datos viven cifrados. La IA olvida cuando tú olvidas." },
+            ].map((p, i) => (
+              <div key={i} className="glow-card" style={{ padding: 28 }}>
+                <div className="h-display aurora-text" style={{ fontSize: 40, marginBottom: 14 }}>{p.n}</div>
+                <div style={{ fontSize: 17, fontWeight: 500, marginBottom: 8 }}>{p.title}</div>
+                <div style={{ fontSize: 14, color: "var(--color-text-secondary)", lineHeight: 1.55 }}>{p.body}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Closing CTA */}
+        <section style={{ padding: "40px 56px 80px", textAlign: "center" }}>
+          <h2 className="h-display" style={{ fontSize: 56, margin: "0 auto 28px", maxWidth: 860, letterSpacing: "-0.04em" }}>
+            Tu próximo movimiento<br />empieza con <span className="aurora-text">uno.</span>
+          </h2>
+          <Link href="/onboarding/goals" className="btn btn-aurora btn-lg" style={{ height: 52, fontSize: 16 }}>
+            Pedir acceso anticipado {I.arrowRight}
+          </Link>
+        </section>
+
+        <footer
           style={{
-            background: "rgba(123,91,255,0.06)",
-            borderColor: "rgba(123,91,255,0.2)",
+            padding: "24px 56px",
+            borderTop: "1px solid var(--color-border-subtle)",
+            display: "flex",
+            alignItems: "center",
+            fontSize: 12,
+            color: "var(--color-text-muted)",
           }}
         >
-          <div className="mb-2 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[#cbbfff]">
-            Lo que necesito de ti
+          <span>© 2026 Finanzia</span>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 20 }}>
+            <a>Privacidad</a>
+            <a>Términos</a>
+            <a>Manifiesto</a>
           </div>
-          <h3 className="font-[family-name:var(--font-display)] text-2xl font-light tracking-tight">
-            Validación antes de codificar.
-          </h3>
-          <ol className="mt-6 space-y-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-            <li>
-              <strong className="text-[var(--color-text-primary)]">1 · Paleta.</strong> ¿La dirección
-              cosmos (violet · blue · cyan + acentos rose/mint/coral) te convence o quieres
-              explorar otra tonalidad?
-            </li>
-            <li>
-              <strong className="text-[var(--color-text-primary)]">2 · Metáforas.</strong> Río
-              temporal, sistema solar, constelación, nebula como fondo global — ¿alguna no encaja?
-            </li>
-            <li>
-              <strong className="text-[var(--color-text-primary)]">3 · Tono del copy.</strong> «Tu
-              río de mayo», «Tu sistema solar de planes» — ¿poético justo, demasiado, poco?
-            </li>
-            <li>
-              <strong className="text-[var(--color-text-primary)]">4 · Pantallas concretas.</strong>{" "}
-              ¿Cambiarías densidad, jerarquía o sección de alguna en particular?
-            </li>
-          </ol>
-        </div>
-      </section>
+        </footer>
+      </div>
+    </div>
+  );
+}
 
-      <footer className="mx-auto mt-24 max-w-6xl border-t pt-8 text-center text-xs text-[var(--color-text-muted)]">
-        <span className="font-[family-name:var(--font-mono)] tracking-widest uppercase">
-          Finanzia · diseño en revisión · {new Date().getFullYear()}
-        </span>
-      </footer>
+function MiniInsight({ kind, title, body }: { kind: "default" | "warning" | "positive"; title: string; body: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 14,
+        alignItems: "flex-start",
+        padding: 14,
+        borderRadius: 14,
+        background: "rgba(255,255,255,0.025)",
+        border: "1px solid var(--color-border-subtle)",
+      }}
+    >
+      <Star size={24} kind={kind} />
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 3 }}>{title}</div>
+        <div style={{ fontSize: 12, color: "var(--color-text-secondary)", lineHeight: 1.5 }}>{body}</div>
+      </div>
     </div>
   );
 }

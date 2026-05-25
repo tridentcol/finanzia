@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
-import { NebulaBg } from "@/components/cosmos/nebula-bg";
 import { Providers } from "@/components/providers";
 import "@/styles/globals.css";
 
@@ -64,7 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${dmSans.variable} ${plexMono.variable} antialiased`}>
-        <NebulaBg />
         <Providers>{children}</Providers>
       </body>
     </html>
